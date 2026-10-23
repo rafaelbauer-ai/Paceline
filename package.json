@@ -48,7 +48,6 @@
       "src/**/*",
       "assets/icon.png",
       "assets/icon.ico",
-      "assets/icon.svg",
       "scripts/claude-statusline.cjs",
       "scripts/install-claude-bridge.cjs",
       "LICENSE",
