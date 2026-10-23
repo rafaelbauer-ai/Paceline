@@ -1,0 +1,26 @@
+name: Bug report
+description: Report a reproducible problem using synthetic data.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include tokens, prompts, private logs or account data. Use SECURITY.md for vulnerabilities."
+  - type: input
+    id: version
+    attributes:
+      label: App version and operating system
+      placeholder: "Desktop 0.2.0, Windows 11, display scaling 125%"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include expected and actual behavior. Use synthetic examples.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Connection and display context
+      description: "Provider CLI version, connection status, timestamp age, monitor setup, and a redacted screenshot if useful."

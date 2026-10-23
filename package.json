@@ -1,0 +1,119 @@
+{
+  "name": "paceline",
+  "productName": "Paceline",
+  "version": "0.4.0",
+  "private": true,
+  "description": "A local, auto-hiding desktop monitor for Codex and Claude Code usage limits.",
+  "author": "Rafael Bauer Lumertz",
+  "license": "MIT",
+  "main": "src/main/main.cjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "electron .",
+    "start:demo": "electron . --demo",
+    "test": "node --test tests/*.test.cjs",
+    "check": "node scripts/check-source.cjs",
+    "pack": "electron-builder --dir --publish never",
+    "dist:win": "electron-builder --win nsis portable --x64 --publish never && node scripts/create-update-manifest.cjs",
+    "dist:mac": "electron-builder --mac dmg --universal --publish never && node scripts/create-update-manifest.cjs --mac",
+    "bridge:install": "node scripts/install-claude-bridge.cjs",
+    "smoke": "electron . --smoke-test",
+    "dist:installer": "electron-builder --win nsis --x64 --publish never && node scripts/create-update-manifest.cjs",
+    "dist:portable": "electron-builder --win portable --x64 --publish never",
+    "update:manifest": "node scripts/create-update-manifest.cjs"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "io.paceline.desktop",
+    "productName": "Paceline",
+    "asar": true,
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "assets/icon.png",
+      "assets/icon.ico",
+      "assets/icon.svg",
+      "scripts/claude-statusline.cjs",
+      "scripts/install-claude-bridge.cjs",
+      "LICENSE",
+      "README.md",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "signExecutable": true
+    },
+    "portable": {
+      "artifactName": "Paceline-${version}-windows-${arch}.exe"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.developer-tools",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "dmg": {
+      "artifactName": "Paceline-${version}-mac-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Paceline-${version}-setup-${arch}.exe",
+      "include": "scripts/installer.nsh",
+      "license": "LICENSE"
+    }
+  },
+  "overrides": {
+    "@electron/get": {
+      "global-agent": "4.1.3"
+    }
+  }
+}

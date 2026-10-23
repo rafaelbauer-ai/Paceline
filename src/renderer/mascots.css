@@ -1,0 +1,271 @@
+/* Provider mascots: stacked SVG slices in CSS 3D. Colours follow each provider's identity. */
+.mascot-defs { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
+
+.mascot {
+  --step:calc(var(--size) * .034);
+  --m-shadow:rgb(0 0 0 / .5);
+  position:relative;
+  display:inline-block;
+  flex:none;
+  width:var(--size);
+  height:calc(var(--size) * var(--ratio));
+  perspective:calc(var(--size) * 5);
+  pointer-events:none;
+}
+/* Explicit depth palettes: SVG paint does not reliably accept per-layer color-mix(). */
+.mascot[data-kind="claude"] { --m-face:#d97757; --m-s1:#bb5a3c; --m-s2:#a84e34; --m-s3:#94432c; --m-eye:#1e120d; }
+.mascot[data-kind="codex"] { --m-face:#f5f5f1; --m-s1:#b6b6b0; --m-s2:#9c9c97; --m-s3:#82827e; --m-core:#0d0d0d; }
+.paceline[data-theme="claude"] .mascot { --m-shadow:rgb(110 50 25 / .3); }
+/* On the cream theme a lighter edge keeps the dark ring crisp instead of heavy. */
+.paceline[data-theme="claude"] .mascot[data-kind="codex"] { --m-face:#262626; --m-s1:#4a4744; --m-s2:#5a5652; --m-s3:#6a6560; --m-core:#fff; }
+
+.mascot-hop,.mascot-float,.mascot-rig,.mascot-stack {
+  position:absolute;
+  inset:0;
+  transform-style:preserve-3d;
+}
+.mascot-hop { transition:transform 460ms cubic-bezier(.34,1.56,.64,1); }
+.mascot-float { animation:tv-mascot-float 6.4s ease-in-out var(--float-delay, 0ms) infinite; }
+/* A resting three-quarter view shows the depth; the pointer adds a little more. */
+.mascot-rig {
+  transform:rotateX(calc(8deg - var(--py, 0) * 10deg)) rotateY(calc(-12deg + var(--px, 0) * 18deg));
+  transition:transform 700ms cubic-bezier(.2,.8,.2,1);
+}
+.mascot-stack { transform:translateZ(calc(var(--lift, 0) * var(--step))); }
+.mascot-layer {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:visible;
+  stroke:none;
+  fill:var(--layer);
+  transform:translateZ(calc(var(--z, 0) * var(--step) * -1));
+}
+.mascot-layer[data-z="0"] { --layer:var(--m-face); }
+.mascot-layer[data-z="1"] { --layer:var(--m-s1); }
+.mascot-layer[data-z="2"] { --layer:var(--m-s2); }
+.mascot-layer[data-z="3"] { --layer:var(--m-s3); }
+/* Sides darken toward the middle, so front and back faces both meet a lit edge. */
+.mascot-layer[data-z="4"] { --layer:var(--m-s2); }
+.mascot-layer[data-z="5"] { --layer:var(--m-s1); }
+.mascot .mascot-layer[data-z="back"] { --layer:var(--m-face); transform:translateZ(calc(var(--z) * var(--step) * -1)) rotateY(180deg); }
+.mascot .mascot-seam { fill:var(--m-s3); }
+.mascot .mascot-core-fill { fill:var(--m-core); stroke:none; }
+/* Faces turned away from the viewer disappear, so each side shows only its own drawing. */
+/* The caret's blink animates opacity, which flattens its stack, so the stack itself hides too. */
+.mascot :is(.mascot-face, .mascot-back, .mascot-core, .mascot-eyes, .mascot-gloss, .mascot-sheen, .mascot-chevron, .mascot-caret, .mascot-frown, .mascot-smile, .mascot-tears),
+.mascot :is(.mascot-chevron, .mascot-caret, .mascot-frown, .mascot-smile) .mascot-layer { backface-visibility:hidden; }
+.mascot[data-kind="codex"] .mascot-stack .mascot-layer { fill:none; stroke:var(--layer); }
+.paceline[data-theme="claude"] .mascot[data-kind="codex"] .mascot-gloss { opacity:.55; }
+.mascot .mascot-sheen {
+  opacity:.75;
+  -webkit-mask-image:linear-gradient(105deg, transparent 38%, #000 50%, transparent 62%);
+  mask-image:linear-gradient(105deg, transparent 38%, #000 50%, transparent 62%);
+  -webkit-mask-size:320% 100%;
+  mask-size:320% 100%;
+  -webkit-mask-position:100% 0;
+  mask-position:100% 0;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+}
+
+.mascot-shadow {
+  position:absolute;
+  left:14%;
+  right:14%;
+  bottom:-18%;
+  height:18%;
+  border-radius:50%;
+  background:radial-gradient(closest-side, var(--m-shadow), transparent);
+  animation:tv-mascot-shadow 6.4s ease-in-out var(--float-delay, 0ms) infinite;
+}
+
+/* Claude: eyes with a glint that blink, legs that step. */
+.mascot .mascot-eyes {
+  fill:var(--m-eye);
+  transform:translateZ(calc(var(--z) * var(--step) * -1)) scaleY(calc(var(--blink, 1) * var(--squint, 1)));
+  transform-origin:50% 30%;
+  transition:transform 90ms ease-in;
+}
+.mascot .mascot-glint { fill:#fff; opacity:.9; }
+.mascot.is-blinking { --blink:.08; }
+.mascot-legs-b { --leg-delay:-180ms; }
+
+/* Codex: the prompt winks with its chevron and its caret blinks like a terminal cursor. */
+.mascot .mascot-chevron {
+  transform:translateZ(calc(var(--lift) * var(--step))) translateX(var(--nudge, 0px)) scaleY(calc(var(--blink, 1) * var(--squint, 1)));
+  transform-origin:37% 50%;
+  transition:transform 220ms cubic-bezier(.34,1.56,.64,1);
+}
+.mascot .mascot-caret { animation:tv-mascot-caret 1.1s steps(1, end) var(--caret-delay, 0ms) infinite; }
+
+/* Hover: hop, walk, nudge and a light sweep. */
+.provider-card:hover .mascot-hop,.brand:hover .mascot-hop,.peek:hover .mascot-hop { transform:translateY(-12%) scale(1.07); }
+.provider-card:hover .mascot .mascot-legs-a,.provider-card:hover .mascot .mascot-legs-b,
+.mascot-cursor.is-moving .mascot .mascot-legs-a,.mascot-cursor.is-moving .mascot .mascot-legs-b {
+  animation:tv-mascot-step 360ms ease-in-out var(--leg-delay, 0ms) infinite alternate;
+}
+.provider-card:hover .mascot[data-kind="codex"],.mascot-cursor.is-moving .mascot[data-kind="codex"] { --nudge:calc(var(--size) * .07); }
+.provider-card:hover .mascot .mascot-caret { animation-duration:.55s; }
+.provider-card:hover .mascot .mascot-sheen,.brand:hover .mascot .mascot-sheen,.mascot-slot .mascot.is-active .mascot-sheen {
+  animation:tv-mascot-sheen 1.1s cubic-bezier(.25,.7,.2,1) 120ms 1 both;
+}
+
+/* Moods follow the tightest limit: crying when almost out, celebrating with arms up above 90% left.
+   Loops stay paused unless their mood is on, so idle mascots cost nothing. */
+.mascot[data-kind="claude"] { --tear-fall:3.6px; }
+.mascot[data-kind="codex"] { --tear-fall:24px; }
+.mascot .mascot-tears { opacity:0; transition:opacity 220ms; }
+.mascot[data-mood="sad"] .mascot-tears { opacity:1; }
+/* Claude's arms lift beside its head and wave; Codex's arms only appear when it celebrates. */
+.mascot .mascot-arm { transition:opacity 200ms; }
+.mascot[data-kind="claude"] .mascot-arm-l { transform-origin:12.5% 50%; }
+.mascot[data-kind="claude"] .mascot-arm-r { transform-origin:87.5% 50%; }
+.mascot[data-kind="codex"] .mascot-arm { opacity:0; }
+.mascot[data-kind="codex"] .mascot-arm-l { transform-origin:12% 58%; }
+.mascot[data-kind="codex"] .mascot-arm-r { transform-origin:90% 56%; }
+.mascot[data-kind="codex"][data-mood="happy"] .mascot-arm { opacity:1; }
+.mascot[data-mood="happy"] .mascot-arm-l { animation:tv-mascot-wave-l .55s ease-in-out var(--wave-delay, 0ms) infinite alternate; }
+.mascot[data-mood="happy"] .mascot-arm-r { animation:tv-mascot-wave-r .55s ease-in-out var(--wave-delay, 0ms) infinite alternate; }
+.mascot[data-kind="codex"][data-mood="happy"] .mascot-arm-l { animation-name:tv-mascot-codex-wave-l; }
+.mascot[data-kind="codex"][data-mood="happy"] .mascot-arm-r { animation-name:tv-mascot-codex-wave-r; }
+/* Codex's caret turns into a frowning mouth when it is sad and a smile when it celebrates. */
+.mascot :is(.mascot-frown, .mascot-smile) { opacity:0; }
+.mascot[data-mood="sad"] .mascot-frown,.mascot[data-mood="happy"] .mascot-smile { opacity:1; }
+.mascot:is([data-mood="sad"], [data-mood="happy"]) .mascot-caret { animation:none; opacity:0; }
+.mascot .mascot-tear {
+  fill:#4fb2ff;
+  transform-box:fill-box;
+  transform-origin:50% 0;
+  animation:tv-mascot-tear 1.4s ease-in calc(var(--tear-delay, 0ms) + var(--tear-offset, 0ms)) infinite paused;
+}
+.mascot[data-mood="sad"] .mascot-tear { animation-play-state:running; }
+.mascot[data-mood="sad"] { --squint:.55; }
+.mascot[data-mood="sad"] .mascot-rig { transform:rotateX(calc(18deg - var(--py, 0) * 6deg)) rotateY(calc(-8deg + var(--px, 0) * 10deg)); }
+.mascot[data-mood="sad"] .mascot-float { animation:tv-mascot-sob 1.8s ease-in-out var(--sob-delay, 0ms) infinite; }
+.mascot[data-mood="happy"] .mascot-float { animation:tv-mascot-jump 1.1s cubic-bezier(.3,.7,.4,1) var(--jump-delay, 0ms) infinite; }
+.mascot[data-mood="happy"] .mascot-shadow { animation:tv-mascot-jump-shadow 1.1s cubic-bezier(.3,.7,.4,1) var(--jump-delay, 0ms) infinite; }
+
+/* Brand slots: the Paceline mark gives way to the mascot of the app in focus. */
+.mascot-slot { position:relative; display:inline-grid; place-items:center; flex:none; }
+.mascot-slot > * { grid-area:1 / 1; }
+.mascot-slot .brand-mark { transition:opacity 220ms, transform 380ms cubic-bezier(.34,1.56,.64,1); }
+.mascot-slot:is([data-active="claude"], [data-active="codex"]) .brand-mark { opacity:0; transform:scale(.4) translateY(40%); }
+.mascot-slot .mascot {
+  opacity:0;
+  transform:scale(.35) translateY(45%);
+  transition:opacity 240ms, transform 560ms cubic-bezier(.34,1.56,.64,1);
+}
+.mascot-slot .mascot.is-active { opacity:1; transform:none; }
+.mascot-slot .mascot:not(.is-active) * { animation-play-state:paused!important; }
+.brand .mascot-slot { width:34px; height:30px; }
+.peek .mascot-slot { width:24px; height:22px; order:0; }
+
+/* Cards */
+.provider-card .provider-symbol { display:grid; place-items:center; width:32px; height:28px; margin:-4px 0 -4px -2px; }
+
+/* The cursor becomes the mascot over the app; text fields keep the system cursor. */
+.paceline.mascot-cursor-on,.paceline.mascot-cursor-on * { cursor:none!important; }
+.mascot-cursor { position:fixed; inset:0; z-index:1000; pointer-events:none; opacity:0; transition:opacity 90ms; }
+.mascot-cursor:is([data-kind="claude"], [data-kind="codex"]) { opacity:1; }
+/* The body sits exactly on the hotspot; the mascot is centred on it and never trails behind. */
+.mascot-cursor-body { position:fixed; left:0; top:0; will-change:transform; }
+.mascot-cursor-lean { position:absolute; left:0; top:0; rotate:var(--lean, 0deg); transition:rotate 160ms ease-out, scale 120ms; }
+.mascot-cursor-lean > .mascot { position:absolute; display:none; left:calc(var(--size) / -2); top:calc(var(--size) * var(--ratio) / -2); }
+.mascot-cursor-lean > .mascot.is-active { display:inline-block; }
+.mascot-cursor .mascot-float { animation:none; }
+/* Moods reach the cursor (arms, tears, mouth) but it never jumps or sobs: the hotspot stays put. */
+.mascot-cursor .mascot[data-mood] .mascot-float { animation:none; }
+.mascot-cursor .mascot-rig,.mascot-cursor .mascot[data-mood] .mascot-rig { transform:rotateX(8deg) rotateY(-12deg); transition:none; }
+.mascot-cursor .mascot-shadow { display:none; }
+.mascot-cursor .mascot.is-spinning .mascot-float { animation:tv-mascot-spin 650ms cubic-bezier(.3,1.2,.5,1) 1; }
+.mascot-cursor.is-pointing .mascot-cursor-lean { scale:1.12; }
+.mascot-cursor.is-pressed .mascot-cursor-lean { scale:.88 .82; }
+
+@keyframes tv-mascot-float {
+  0%,100% { transform:translateY(0) rotateY(-6deg); }
+  50% { transform:translateY(-7%) rotateY(6deg); }
+}
+/* Claude: the arm block rises above the head, grows taller and waves about the shoulder. */
+@keyframes tv-mascot-wave-l {
+  from { transform:translateY(-50%) scaleY(1.7) rotateZ(-10deg); }
+  to { transform:translateY(-62%) scaleY(1.7) rotateZ(6deg); }
+}
+@keyframes tv-mascot-wave-r {
+  from { transform:translateY(-50%) scaleY(1.7) rotateZ(10deg); }
+  to { transform:translateY(-62%) scaleY(1.7) rotateZ(-6deg); }
+}
+/* Codex: the raised arms swing outward and back from where they meet the ring. */
+@keyframes tv-mascot-codex-wave-l {
+  from { transform:rotateZ(-12deg); }
+  to { transform:rotateZ(10deg); }
+}
+@keyframes tv-mascot-codex-wave-r {
+  from { transform:rotateZ(12deg); }
+  to { transform:rotateZ(-10deg); }
+}
+@keyframes tv-mascot-tear {
+  0% { transform:translateY(0) scale(.5); opacity:0; }
+  15% { transform:translateY(0) scale(1); opacity:1; }
+  100% { transform:translateY(var(--tear-fall)) scale(.85); opacity:0; }
+}
+@keyframes tv-mascot-sob {
+  0%,100% { transform:translateY(6%) rotateZ(0deg); }
+  18% { transform:translateY(3%) rotateZ(-3deg); }
+  28% { transform:translateY(7%) rotateZ(2.5deg); }
+  38% { transform:translateY(4%) rotateZ(-2deg); }
+  55% { transform:translateY(6%) rotateZ(0deg); }
+}
+@keyframes tv-mascot-jump {
+  0%,100% { transform:translateY(0) scale(1.06, .92); }
+  15% { transform:translateY(0) scale(1); }
+  45% { transform:translateY(-34%) scale(.96, 1.05); }
+  75% { transform:translateY(0) scale(1); }
+  85% { transform:translateY(0) scale(1.06, .92); }
+}
+@keyframes tv-mascot-jump-shadow {
+  0%,15%,75%,100% { transform:scaleX(1); opacity:1; }
+  45% { transform:scaleX(.6); opacity:.45; }
+}
+@keyframes tv-mascot-spin {
+  0% { transform:translateY(0) rotateY(0deg) scale(1); }
+  40% { transform:translateY(-24%) rotateY(200deg) scale(1.15); }
+  100% { transform:translateY(0) rotateY(360deg) scale(1); }
+}
+@keyframes tv-mascot-shadow {
+  0%,100% { transform:scaleX(1); opacity:1; }
+  50% { transform:scaleX(.82); opacity:.7; }
+}
+@keyframes tv-mascot-step {
+  from { transform:translateY(0); }
+  to { transform:translateY(-12%); }
+}
+@keyframes tv-mascot-caret {
+  0% { opacity:1; }
+  50% { opacity:0; }
+}
+@keyframes tv-mascot-sheen {
+  from { -webkit-mask-position:100% 0; mask-position:100% 0; }
+  to { -webkit-mask-position:0 0; mask-position:0 0; }
+}
+
+/* Working: the agent is running a turn. Claude walks in place and glances around; Codex's prompt
+   types. The individual translate property composes with each layer's own depth transform. */
+.mascot[data-mood="working"] .mascot-legs-a,.mascot[data-mood="working"] .mascot-legs-b { animation:tv-mascot-step 300ms ease-in-out calc(var(--step-delay, 0ms) + var(--leg-delay, 0ms)) infinite alternate; }
+.mascot[data-kind="claude"][data-mood="working"] .mascot-eyes { animation:tv-mascot-glance 2.6s ease-in-out var(--glance-delay, 0ms) infinite; }
+.mascot[data-kind="codex"][data-mood="working"] .mascot-caret { animation-duration:.45s; animation-delay:var(--blip-delay, 0ms); }
+.mascot[data-kind="codex"][data-mood="working"] .mascot-chevron { animation:tv-mascot-type .8s ease-in-out var(--type-delay, 0ms) infinite; }
+@keyframes tv-mascot-glance {
+  0%,30% { translate:0 0; }
+  40%,62% { translate:6% 0; }
+  72%,92% { translate:-6% 0; }
+  100% { translate:0 0; }
+}
+@keyframes tv-mascot-type {
+  0%,100% { translate:0 0; }
+  50% { translate:5% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mascot[data-mood="working"] * { animation:none!important; }
+}

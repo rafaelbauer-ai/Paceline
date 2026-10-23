@@ -1,0 +1,75 @@
+name: Checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - run: npm audit --audit-level=moderate
+      - run: npm run check
+      - run: npm test
+  windows-package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paceline-windows
+          path: |
+            release/*.exe
+            release/paceline-update.json
+            release/*.sha256
+          retention-days: 7
+  mac-package:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Build the universal disk image (ad-hoc signed, not notarized)
+        run: npm run dist:mac
+        env:
+          # The ad-hoc signature uses no secrets, so pull request builds are signed the same way.
+          CSC_FOR_PULL_REQUEST: 'true'
+      - name: Verify the signature and both architectures
+        run: |
+          app="release/mac-universal/Paceline.app"
+          codesign --verify --deep --strict "$app"
+          lipo "$app/Contents/MacOS/Paceline" -verify_arch x86_64 arm64
+      - name: Smoke-test the packaged app
+        timeout-minutes: 5
+        run: release/mac-universal/Paceline.app/Contents/MacOS/Paceline --smoke-test | tee smoke.log && grep -q PACELINE_SMOKE_OK smoke.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paceline-macos
+          path: |
+            release/*.dmg
+            release/paceline-update-mac.json
+            release/*.dmg.sha256
+          retention-days: 7

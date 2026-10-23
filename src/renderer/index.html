@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Paceline</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="orientation.css">
+  <link rel="stylesheet" href="mascots.css">
+</head>
+<body>
+  <main id="paceline" class="paceline" data-i18n-attr="aria-label:html.appLabel" aria-label="Paceline — monitor de limites de IA">
+    <button id="peek" class="peek" aria-label="Abrir Paceline" aria-expanded="false" aria-controls="dashboard">
+      <span class="mascot-slot" data-mascot-slot="peek" data-size="22" aria-hidden="true"><span class="brand-mark"><i></i><i></i><i></i></span></span>
+      <span class="peek-divider" aria-hidden="true"></span>
+      <span class="peek-provider" title="Codex"><span class="peek-label">CX</span><span id="peek-codex" class="peek-value">—</span></span>
+      <span class="peek-provider" title="Claude Code"><span class="peek-label">CL</span><span id="peek-claude" class="peek-value">—</span></span>
+      <span id="peek-dot" class="signal-dot" aria-hidden="true"></span>
+    </button>
+
+    <section id="dashboard" class="dashboard" hidden>
+      <header class="header">
+        <div class="brand" id="drag-handle" data-i18n-attr="title:html.dragHint" title="Arraste para mover o painel"><span class="mascot-slot" data-mascot-slot="brand" data-size="32" aria-hidden="true"><span class="brand-mark"><i></i><i></i><i></i></span></span><div><h1>Paceline</h1><p id="context-status">SEUS LIMITES, À VISTA</p></div></div>
+        <div class="header-actions">
+          <div class="language-switch" role="group" data-i18n-attr="aria-label:language.group" aria-label="Idioma">
+            <button type="button" class="flag-button" data-language="pt" data-i18n-attr="title:language.pt;aria-label:language.pt" title="Português" aria-label="Português" aria-pressed="false"><svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.6 18 7l-8 5.4L2 7Z" fill="#ffdf00"/><circle cx="10" cy="7" r="3.1" fill="#002776"/><path d="M7.1 6.3c1.9-.5 4-.2 5.7.9" stroke="#fff" stroke-width=".7" fill="none"/></svg></button>
+            <button type="button" class="flag-button" data-language="en" data-i18n-attr="title:language.en;aria-label:language.en" title="Inglês" aria-label="Inglês" aria-pressed="false"><svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#fff"/><path d="M0 0h20v1.08H0zm0 2.15h20v1.08H0zm0 2.16h20v1.07H0zm0 2.15h20v1.08H0zm0 2.15h20v1.08H0zm0 2.16h20v1.07H0zm0 2.15h20V14H0z" fill="#b22234"/><rect width="8.5" height="7.54" fill="#3c3b6e"/><path d="M1.4 1.3h.4m1.5 0h.4m1.5 0h.4m1.5 0h.4M2.2 2.5h.4m1.5 0h.4m1.5 0h.4M1.4 3.7h.4m1.5 0h.4m1.5 0h.4m1.5 0h.4M2.2 4.9h.4m1.5 0h.4m1.5 0h.4M1.4 6.1h.4m1.5 0h.4m1.5 0h.4m1.5 0h.4" stroke="#fff" stroke-width=".55" stroke-linecap="round"/></svg></button>
+            <button type="button" class="flag-button" data-language="es" data-i18n-attr="title:language.es;aria-label:language.es" title="Espanhol" aria-label="Espanhol" aria-pressed="false"><svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg></button>
+          </div>
+          <span id="demo-badge" class="demo-badge" hidden>DEMO</span>
+          <button id="pin" class="icon-button" title="Manter painel aberto" aria-label="Manter painel aberto" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 3 8 0-1 6 3 3v2H6v-2l3-3-1-6ZM12 14v7"/></svg></button>
+          <button id="settings-toggle" class="icon-button" data-i18n-attr="title:html.settings" title="Configurações" aria-label="Abrir configurações" aria-expanded="false" aria-controls="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg></button>
+        </div>
+      </header>
+
+      <nav id="view-nav" class="view-nav" data-i18n-attr="aria-label:html.viewsNav" aria-label="Visões do monitor">
+        <button data-view="monitor" aria-current="page" data-i18n="html.navLimits">Limites</button>
+        <button data-view="history" data-i18n="html.navHistory">Histórico</button>
+        <button data-view="projects" data-i18n="html.projects">Projetos</button>
+      </nav>
+
+      <div id="monitor" class="monitor">
+        <div class="section-caption"><span id="metric-caption">LIMITES DA ASSINATURA</span><span id="monitor-status"><span class="signal-dot"></span>Conecte suas ferramentas</span></div>
+        <div id="providers" class="providers" data-i18n-attr="aria-label:html.providersLabel" aria-label="Consumo das ferramentas"></div>
+        <p class="method-note" data-i18n="html.methodNote">Cada limite é independente; não some as porcentagens.</p>
+      </div>
+
+      <section id="history" class="detail-view" data-i18n-attr="aria-label:html.historyLabel" aria-label="Histórico de limites da conta" hidden>
+        <div class="view-heading"><div><h2 data-i18n="html.historyTitle">Histórico de uso</h2></div><div class="segmented" data-i18n-attr="aria-label:html.rangeLabel" aria-label="Período das leituras exibidas"><button data-range="day" aria-pressed="true" data-i18n="html.rangeDay">Últimas 24 h</button><button data-range="week" aria-pressed="false" data-i18n="html.rangeWeek">Últimos 7 dias</button></div></div>
+        <p class="view-description" data-i18n="html.historyDescription">O filtro escolhe quais leituras mostrar. O gráfico mostra a porcentagem usada de cada limite, não a soma do consumo no período.</p>
+        <div id="history-content" class="history-content"></div>
+      </section>
+
+      <section id="projects" class="detail-view" data-i18n-attr="aria-label:html.projectsLabel" aria-label="Uso local por projeto" hidden>
+        <div class="view-heading"><div><h2 data-i18n="html.projectsTitle">Seus projetos</h2></div></div>
+        <p id="local-usage-description" class="view-description" data-i18n="html.localUsageDescription">Tokens são partes do texto processado. A contagem local não determina a porcentagem da sua assinatura.</p>
+        <div id="local-usage-status" class="inline-status" role="status"></div>
+        <div class="segmented local-tabs" data-i18n-attr="aria-label:html.localGrouping" aria-label="Agrupamento do uso local"><button data-local-view="projects" aria-pressed="true" data-i18n="html.projects">Projetos</button><button data-local-view="sessions" aria-pressed="false" data-i18n="html.sessions">Sessões</button></div>
+        <div id="projects-content" class="projects-content"></div>
+      </section>
+
+      <section id="settings" class="settings" data-i18n-attr="aria-label:html.settings" aria-label="Configurações" hidden>
+        <div class="settings-heading"><h2 data-i18n="html.settingsTitle">Do seu jeito.</h2><button id="settings-close" class="text-button"><span data-i18n="html.back">Voltar</span> <span aria-hidden="true">↗</span></button></div>
+        <div class="settings-group">
+          <h3 data-i18n="html.appearance">Aparência</h3>
+          <label class="field-label" for="theme-select" data-i18n="html.theme">Tema</label>
+          <select id="theme-select"><option value="auto" data-i18n="html.themeAuto">Automático · acompanha o app em foco</option><option value="paceline" data-i18n="html.themePaceline">Paceline · carvão e mint</option><option value="codex" data-i18n="html.themeCodex">Codex · neutro</option><option value="claude" data-i18n="html.themeClaude">Claude · creme e terracota</option></select>
+          <label class="setting-row compact context-setting" for="follow-active"><span><strong data-i18n="html.followActive">Acompanhar o app em foco</strong><small data-i18n="html.followActiveHelp">Prioriza Codex ou Claude quando reconhecidos.</small></span><input id="follow-active" type="checkbox" role="switch" checked><span class="switch" aria-hidden="true"></span></label>
+          <p id="context-help" class="field-help">O app em foco aparece primeiro. O Paceline mantém o último tema quando você alterna para outra janela.</p>
+          <label class="range-label" for="scale"><span data-i18n="html.size">Tamanho</span><output id="scale-output" for="scale">100%</output></label><input id="scale" type="range" min="80" max="130" step="5" value="100">
+          <label class="range-label" for="opacity"><span data-i18n="html.opacity">Opacidade</span><output id="opacity-output" for="opacity">100%</output></label><input id="opacity" type="range" min="50" max="100" step="5" value="100">
+          <label class="range-label" for="hide-delay"><span data-i18n="html.hideDelay">Tempo para recolher</span><output id="hide-delay-output" for="hide-delay">450 ms</output></label><input id="hide-delay" type="range" min="200" max="5000" step="50" value="450">
+        </div>
+        <div class="settings-group">
+          <h3 data-i18n="html.trackTitle">O que acompanhar</h3>
+          <div class="check-options"><label><input type="checkbox" data-visible-provider="codex" checked>Codex</label><label><input type="checkbox" data-visible-provider="claude" checked>Claude Code</label></div>
+          <p class="field-help" data-i18n="html.trackHelp">Selecione ao menos uma ferramenta para exibir.</p>
+        </div>
+        <div class="settings-group">
+          <h3 data-i18n="html.alerts">Avisos</h3>
+          <label class="setting-row compact" for="notify-all"><span><strong data-i18n="html.notifyAll" data-i18n-mac="html.notifyAllMac">Notificações do Windows</strong></span><input id="notify-all" type="checkbox" role="switch" checked><span class="switch" aria-hidden="true"></span></label>
+          <p class="field-label" id="alert-levels-label" data-i18n="html.alertLevels">Avisar quando restar</p>
+          <div class="chip-options" role="group" aria-labelledby="alert-levels-label"><button type="button" class="chip" data-alert-left="30" aria-pressed="false">30%</button><button type="button" class="chip" data-alert-left="20" aria-pressed="true">20%</button><button type="button" class="chip" data-alert-left="10" aria-pressed="false">10%</button><button type="button" class="chip" data-alert-left="5" aria-pressed="true">5%</button></div>
+          <p class="field-help" data-i18n="html.alertLevelsHelp">Na mesma unidade dos cards. Nenhum marcado desativa os avisos de limite.</p>
+          <label class="setting-row compact" for="notify-reset"><span><strong data-i18n="html.notifyReset">Avisar quando o limite renovar</strong><small data-i18n="html.notifyResetHelp">Só quando você estava perto do limite.</small></span><input id="notify-reset" type="checkbox" role="switch" checked><span class="switch" aria-hidden="true"></span></label>
+          <label class="setting-row compact" for="notify-done"><span><strong data-i18n="html.notifyDone">Avisar quando o Claude ou o Codex terminar</strong><small data-i18n="html.notifyDoneHelp">Só depois de tarefas de um minuto ou mais.</small></span><input id="notify-done" type="checkbox" role="switch" checked><span class="switch" aria-hidden="true"></span></label>
+        </div>
+        <div class="settings-group">
+          <h3 data-i18n="html.deskTitle">Na sua mesa</h3>
+        <fieldset class="edge-field"><legend data-i18n="html.screenPosition">Posição na tela</legend><div class="edge-options">
+          <button type="button" data-edge="top" aria-pressed="false"><span aria-hidden="true">↑</span><bdi data-i18n="html.edgeTop">Topo</bdi></button>
+          <button type="button" data-edge="right" aria-pressed="false"><span aria-hidden="true">→</span><bdi data-i18n="html.edgeRight">Direita</bdi></button>
+          <button type="button" data-edge="bottom" aria-pressed="false"><span aria-hidden="true">↓</span><bdi data-i18n="html.edgeBottom">Base</bdi></button>
+          <button type="button" data-edge="left" aria-pressed="false"><span aria-hidden="true">←</span><bdi data-i18n="html.edgeLeft">Esquerda</bdi></button>
+        </div></fieldset>
+        <label class="setting-row" for="launch-login"><span><strong data-i18n="html.launchLogin" data-i18n-mac="html.launchLoginMac">Abrir com o Windows</strong><small data-i18n="html.launchLoginHelp">Pronto quando o trabalho começa.</small></span><input id="launch-login" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        <p class="field-help" data-i18n="html.dragHelp">Você também pode arrastar o título do painel para posicioná-lo na tela.</p>
+        </div>
+        <div class="settings-group"><h3 data-i18n="html.connections">Conexões</h3><div id="integration-settings"></div></div>
+        <div class="settings-group">
+          <h3 data-i18n="html.updates">Atualizações</h3>
+          <p id="update-status" class="update-status" role="status" data-i18n="app.update.idle">Nenhum canal de atualização configurado. O repositório fica em Avançado.</p>
+          <progress id="update-progress" max="100" value="0" hidden data-i18n-attr="aria-label:html.updateProgress" aria-label="Download da atualização"></progress>
+          <div class="update-actions"><button id="check-update" class="secondary-button" data-i18n="html.checkUpdate">Buscar atualização</button><button id="download-update" class="primary-button" hidden data-i18n="html.downloadUpdate">Baixar versão</button><button id="install-update" class="primary-button" hidden data-i18n="html.installUpdate">Reiniciar e instalar</button></div>
+          <details class="advanced"><summary data-i18n="html.advanced">Avançado</summary>
+          <label class="field-label" for="update-repository" data-i18n="html.updateRepository">Repositório das releases no GitHub</label>
+          <form id="repository-form" class="input-action"><input id="update-repository" type="text" data-i18n-attr="placeholder:html.repositoryPlaceholder" placeholder="autor/paceline" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="submit" data-i18n="html.save">Salvar</button></form>
+          <p class="field-help" data-i18n="html.updateRepositoryHelp">Use o repositório do projeto em que você confia. O Paceline procura releases desse endereço.</p>
+          </details>
+        </div>
+        <div class="privacy-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v5c0 5 8 10 8 10s8-5 8-10V6l-8-3Z"/><path d="m8 12 3 3 5-6"/></svg><div><strong data-i18n="html.privacyTitle">Suas métricas ficam aqui.</strong><p data-i18n="html.privacyBody">O Paceline lê limites e métricas locais. Não salva nem envia seus prompts, conversas ou senhas.</p></div></div>
+        <div class="about"><span>Paceline <span id="version">—</span></span><span>LOCAL · OPEN SOURCE</span></div>
+        <button id="quit" class="quit-button"><span data-i18n="html.quit">Encerrar Paceline</span> <span aria-hidden="true">↗</span></button>
+      </section>
+
+      <footer class="footer"><span id="footer-status"><span class="signal-dot"></span>Monitor local</span><button id="refresh" class="text-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg><span data-i18n="html.refresh">Atualizar</span></button></footer>
+      <div id="notice" class="notice" role="status" hidden></div>
+    </section>
+  </main>
+  <template id="provider-template">
+    <article class="provider-card">
+      <div class="provider-heading"><span class="provider-symbol" aria-hidden="true"></span><h2></h2><span class="provider-state"></span></div>
+      <div class="provider-content"></div>
+      <div class="provider-bottom"><span class="freshness"></span><button class="provider-action text-button"></button></div>
+    </article>
+  </template>
+  <script src="i18n.js"></script>
+  <script src="quota-format.js"></script>
+  <script src="mascots.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

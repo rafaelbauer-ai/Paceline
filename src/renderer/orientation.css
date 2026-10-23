@@ -1,0 +1,30 @@
+/* The collapsed handle follows its screen edge while keeping every label upright. */
+.paceline:is([data-edge="left"], [data-edge="right"]):not(.expanded) .peek {
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+  padding:12px 6px;
+}
+
+.paceline:is([data-edge="left"], [data-edge="right"]):not(.expanded) .peek-divider {
+  width:24px;
+  height:1px;
+  flex:none;
+}
+
+.paceline:is([data-edge="left"], [data-edge="right"]):not(.expanded) .peek-provider {
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  width:100%;
+  line-height:14px;
+  flex:none;
+}
+
+.paceline:is([data-edge="left"], [data-edge="right"]):not(.expanded) .peek-value {
+  white-space:nowrap;
+}
+
+.paceline:is([data-edge="left"], [data-edge="right"]):not(.expanded) .peek .signal-dot {
+  margin:0;
+}

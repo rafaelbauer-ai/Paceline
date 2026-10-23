@@ -1,0 +1,110 @@
+name: Build release candidate
+on:
+  workflow_dispatch:
+    inputs:
+      create_draft_release:
+        description: Create a draft GitHub release after building and testing
+        required: false
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=moderate
+      - run: npm run check
+      - run: npm test
+      - id: version
+        shell: pwsh
+        run: |
+          $releaseVersion = node -p "require('./package.json').version"
+          "version=$releaseVersion" >> $env:GITHUB_OUTPUT
+      - name: Build Windows artifacts (signed only when a real certificate is configured)
+        run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
+      - name: Verify configured Authenticode signing
+        shell: pwsh
+        env:
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+        run: |
+          if ($env:CSC_LINK) {
+            Get-ChildItem -LiteralPath release -Filter '*.exe' | ForEach-Object {
+              $artifactSignature = Get-AuthenticodeSignature -LiteralPath $_.FullName
+              if ($artifactSignature.Status -ne 'Valid') { throw 'A configured signing certificate did not produce a valid signed artifact.' }
+            }
+          } else {
+            Write-Output 'No signing certificate configured. These artifacts are unsigned.'
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paceline-release
+          path: |
+            release/*.exe
+            release/paceline-update.json
+            release/*.sha256
+          retention-days: 14
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - name: Build the universal disk image (ad-hoc signed, not notarized)
+        run: npm run dist:mac
+      - name: Verify the signature and both architectures
+        run: |
+          app="release/mac-universal/Paceline.app"
+          codesign --verify --deep --strict "$app"
+          lipo "$app/Contents/MacOS/Paceline" -verify_arch x86_64 arm64
+      - name: Smoke-test the packaged app
+        timeout-minutes: 5
+        run: release/mac-universal/Paceline.app/Contents/MacOS/Paceline --smoke-test | tee smoke.log && grep -q PACELINE_SMOKE_OK smoke.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paceline-release-mac
+          path: |
+            release/*.dmg
+            release/paceline-update-mac.json
+            release/*.dmg.sha256
+          retention-days: 14
+  draft:
+    if: ${{ inputs.create_draft_release }}
+    needs: [build, build-mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: paceline-release
+          path: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: paceline-release-mac
+          path: release
+      - name: Create reviewable draft (never automatically publishes)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          gh release create "v$RELEASE_VERSION" release/*.exe release/*.dmg release/paceline-update.json release/paceline-update-mac.json release/*.sha256 --draft --target "$RELEASE_COMMIT" --title "Paceline $RELEASE_VERSION" --generate-notes

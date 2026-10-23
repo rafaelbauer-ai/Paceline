@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an improvement to the overlay.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What task are you trying to accomplish?
+      description: Explain the current difficulty and who it affects.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Explain the result you want and any alternatives you tried.
+    validations:
+      required: true
+  - type: textarea
+    id: interfaces
+    attributes:
+      label: Provider documentation, if applicable
+      description: Link an official interface; do not share credentials or private account data.

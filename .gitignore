@@ -1,0 +1,37 @@
+# Private runtime data: never publish these.
+.local/
+data/
+paceline-data/
+*.sqlite*
+*.db
+*.db-wal
+*.db-shm
+logs/
+.env
+.env.*
+!.env.example
+*credentials*.json
+auth.json
+# Dependencies and generated builds
+node_modules/
+release/
+dist/
+coverage/
+__pycache__/
+*.py[cod]
+.venv/
+*.log
+.DS_Store
+Thumbs.db
+*.lnk
+*.pfx
+*.p12
+*.key
+storage-location.json
+usage-history.json
+local-usage.json
+claude-local-usage.json
+claude-transcripts.json
+
+# Local knowledge graph (graphify): generated, contains absolute paths
+graphify-out/
