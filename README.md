@@ -6,9 +6,18 @@ A small desktop overlay for keeping an eye on Claude Code and Codex subscription
 
 This is an early desktop release for Windows and macOS, built with Electron and vanilla JavaScript. [Leia em português](README.pt-BR.md).
 
-![Paceline overlay with clearly labeled demonstration data](assets/demo.png)
+![Paceline panel in its Paceline and Claude themes, with demonstration data](assets/demo.png)
 
-*Demo view; illustrative readings, not a promise of account limits.*
+*The Paceline and Claude themes with sample readings; not a promise of account limits.*
+
+## Download
+
+Get the latest version from the [Releases page](https://github.com/rafaelbauer-ai/Paceline/releases/latest):
+
+- **Windows 10/11 (x64):** the installer (`Paceline-…-setup-x64.exe`) or the portable app (`Paceline-…-windows-x64.exe`), which runs without installing.
+- **macOS 12 or newer (Apple Silicon and Intel):** the disk image (`Paceline-…-mac-universal.dmg`).
+
+The builds are not code-signed yet. Windows may show a SmartScreen warning (**More info → Run anyway**), and macOS asks you to approve the first launch (see [macOS](#macos)). Paceline reads your limits through the official [Claude Code](https://code.claude.com/docs/en/setup) and [Codex](https://developers.openai.com/codex/cli/) CLIs, so install and sign in to the ones you use.
 
 ## What it does
 
@@ -33,9 +42,9 @@ Percentages represent subscription rate limits, **not exact tokens or money**. M
 
 ## Windows installer
 
-Build or obtain the publisher's `Paceline-0.4.0-setup-x64.exe` to install per user with a folder picker, shortcuts and an uninstaller. If `D:\projetos` exists, a new installation defaults to `D:\projetos\Paceline-Desktop`. A portable executable remains available. The uninstaller restores the Claude integration and retains local data. [Installation, updates and signing](docs/UPDATES.md) explains the details and migration between folders.
+The installer (`Paceline-…-setup-x64.exe`) installs per user, without administrator rights, with a folder picker, shortcuts and an uninstaller. The portable executable runs without installing. The uninstaller restores the Claude integration and retains local data. [Installation, updates and signing](docs/UPDATES.md) explains the details and migration between folders.
 
-No public download repository or signing certificate is preconfigured in this source checkout. Unsigned builds may show a Windows publisher warning. Only the optional terminal bridge requires Node.js on `PATH`.
+The builds are not code-signed, so Windows may show a publisher warning. Only the optional terminal bridge requires Node.js on `PATH`.
 
 ## macOS
 
@@ -102,7 +111,7 @@ Official references: [status-line data](https://code.claude.com/docs/en/statusli
 
 ## Local data and privacy
 
-Development state lives in `.local/data/`. The Windows builds keep their data in `paceline-data/` beside the executable; the macOS app uses `~/Library/Application Support/Paceline`. Set `PACELINE_HOME` to choose a different location. Use a writable folder; on this development machine, projects and data belong on `D:`.
+Development state lives in `.local/data/`. The Windows builds keep their data in `paceline-data/` beside the executable; the macOS app uses `~/Library/Application Support/Paceline`. Set `PACELINE_HOME` to choose a different location; use a writable folder.
 
 The overlay does not upload metrics, proxy AI requests or scrape browser sessions. Provider CLIs still communicate with their own services using their existing authentication. The Claude Code login token is used only for the usage request described above. Local settings, caches, backups, logs, databases and build output are excluded from Git and release packages.
 
@@ -131,7 +140,7 @@ In settings, choose a fixed theme or enable active-app following. This recogniti
 
 ## Updates
 
-Enter a trusted public `owner/repo` in update settings, then check, download and install explicitly. Downloaded installers are bound to the selected release and verified with SHA-256, SHA-512 and size checks before execution. No repository is selected by default; without a published stable release and manifest, the app explains that updates are not configured/available. Checksums are integrity checks, not a substitute for a trustworthy publisher or code signing. [Update details](docs/UPDATES.md).
+Enter a trusted public `owner/repo` in update settings (`rafaelbauer-ai/Paceline` for the official builds), then check, download and install explicitly. Downloaded installers are bound to the selected release and verified with SHA-256, SHA-512 and size checks before execution. No repository is selected by default; without a published stable release and manifest, the app explains that updates are not configured/available. Checksums are integrity checks, not a substitute for a trustworthy publisher or code signing. [Update details](docs/UPDATES.md).
 
 ## Contribute
 

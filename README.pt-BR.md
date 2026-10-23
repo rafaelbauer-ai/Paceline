@@ -2,6 +2,15 @@
 
 Uma overlay discreta para acompanhar Claude Code e Codex sem registrar sessões na mão. Ela se recolhe na borda da tela e abre ao passar o mouse. Você pode escolher a borda, arrastar o painel, fixar aberto e recuperar pelo ícone perto do relógio (na barra de menus, no Mac) ou `Ctrl+Alt+V` (`Control+Option+V` no Mac).
 
+## Baixar
+
+Pegue a versão mais recente na [página de Releases](https://github.com/rafaelbauer-ai/Paceline/releases/latest):
+
+- **Windows 10/11 (x64):** o instalador (`Paceline-…-setup-x64.exe`) ou a versão portátil (`Paceline-…-windows-x64.exe`), que roda sem instalar.
+- **macOS 12 ou mais novo (Apple Silicon e Intel):** a imagem de disco (`Paceline-…-mac-universal.dmg`).
+
+Os builds ainda não têm assinatura de código. No Windows pode aparecer o aviso do SmartScreen (**Mais informações → Executar assim mesmo**); no Mac, é preciso liberar a primeira abertura (veja [Mac](#mac)). O Paceline lê os limites pelos CLIs oficiais do [Claude Code](https://code.claude.com/docs/en/setup) e do [Codex](https://developers.openai.com/codex/cli/), então instale e entre nos que você usa.
+
 ## O que há na versão 0.4.0
 
 - Consumo e reset informados pelas ferramentas, com idade da última leitura.
@@ -23,9 +32,9 @@ Em **Projetos**, o número em destaque não conta a leitura de cache, que repete
 
 ## Instalar ou executar
 
-O build produz `release/Paceline-0.4.0-setup-x64.exe` e `release/Paceline-0.4.0-windows-x64.exe`. O instalador permite escolher uma pasta e usa `D:\projetos\Paceline-Desktop` por padrão quando `D:\projetos` existe. Os dados ficam em `paceline-data` ao lado do aplicativo. A desinstalação restaura a integração Claude e preserva histórico/configurações.
+No Windows, o instalador (`Paceline-…-setup-x64.exe`) instala por usuário, sem pedir administrador, e deixa escolher a pasta; a versão portátil (`Paceline-…-windows-x64.exe`) roda sem instalar. Os dados ficam em `paceline-data` ao lado do aplicativo. A desinstalação restaura a integração Claude e preserva histórico/configurações.
 
-Não há certificado nem repositório público inventado: sem certificado real, o Windows pode mostrar aviso de editor desconhecido. O canal de atualização só funciona depois que um publicador real disponibilizar a release e seu manifesto.
+Os builds não têm assinatura de código, então o Windows pode mostrar aviso de editor desconhecido. Para receber atualizações pelo próprio app, configure `rafaelbauer-ai/Paceline` nas opções de atualização.
 
 ### Mac
 

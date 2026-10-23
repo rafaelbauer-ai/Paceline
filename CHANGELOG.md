@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 — Unreleased
+## 0.4.0 — 2026-10-23
 
 - macOS version: a universal disk image (Apple Silicon and Intel, macOS 12+), ad-hoc signed and not notarized, built and smoke-tested by a macOS job in both workflows. The app lives in the menu bar on every Space, keeps its data in `~/Library/Application Support/Paceline` and finds the CLIs through the login shell's `PATH`. It reads the Claude Code login from the Keychain, opens the Claude sign-in in the terminal app and supports opening at login. Its shortcut is `Control+Option+V`. The automatic theme recognizes the desktop apps and terminals running one of the CLIs. Updates use their own manifest and a verified disk image.
 - Rename the app from TOKEN-VAULT to Paceline. The data folder beside the executable moves from `token-vault-data` to `paceline-data` on first start, a terminal bridge installed by an older build is re-pointed to it, the `vault` theme becomes `paceline`, and `TOKEN_VAULT_HOME`/`TOKEN_VAULT_CODEX_COMMAND` become `PACELINE_HOME`/`PACELINE_CODEX_COMMAND`.
