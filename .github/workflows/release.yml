@@ -48,7 +48,7 @@ jobs:
           } else {
             Write-Output 'No signing certificate configured. These artifacts are unsigned.'
           }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: paceline-release
           path: |
@@ -77,7 +77,7 @@ jobs:
       - name: Smoke-test the packaged app
         timeout-minutes: 5
         run: release/mac-universal/Paceline.app/Contents/MacOS/Paceline --smoke-test | tee smoke.log && grep -q PACELINE_SMOKE_OK smoke.log
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: paceline-release-mac
           path: |
