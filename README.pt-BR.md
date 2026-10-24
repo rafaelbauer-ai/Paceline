@@ -1,5 +1,7 @@
 # Paceline
 
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Última release](https://img.shields.io/github/v/release/rafaelbauer-ai/Paceline?include_prereleases)](https://github.com/rafaelbauer-ai/Paceline/releases/latest) ![Stars](https://img.shields.io/github/stars/rafaelbauer-ai/Paceline?style=social)
+
 Uma overlay discreta para acompanhar Claude Code e Codex sem registrar sessões na mão. Ela se recolhe na borda da tela e abre ao passar o mouse. Você pode escolher a borda, arrastar o painel, fixar aberto e recuperar pelo ícone perto do relógio (na barra de menus, no Mac) ou `Ctrl+Alt+V` (`Control+Option+V` no Mac).
 
 ## Baixar

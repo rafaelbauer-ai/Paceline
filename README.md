@@ -1,5 +1,7 @@
 # Paceline
 
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Latest release](https://img.shields.io/github/v/release/rafaelbauer-ai/Paceline?include_prereleases)](https://github.com/rafaelbauer-ai/Paceline/releases/latest) ![Stars](https://img.shields.io/github/stars/rafaelbauer-ai/Paceline?style=social)
+
 A small desktop overlay for keeping an eye on Claude Code and Codex subscription limits. It hides at the edge of your screen and opens when you need it; choose the top, bottom, left or right edge.
 
 **Local first. Automatic provider limits, local token counts and a monitor that follows your work.**
