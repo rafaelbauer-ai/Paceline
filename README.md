@@ -50,7 +50,7 @@ The builds are not code-signed, so Windows may show a publisher warning. Only th
 
 ## macOS
 
-Open `Paceline-0.4.0-mac-universal.dmg` and drag Paceline into Applications. It runs on macOS 12 or newer, on Apple Silicon and Intel, and lives in the menu bar without a Dock icon.
+Open `Paceline-0.4.1-mac-universal.dmg` and drag Paceline into Applications. It runs on macOS 12 or newer, on Apple Silicon and Intel, and lives in the menu bar without a Dock icon.
 
 The app is ad-hoc signed but not notarized by Apple, so the first launch shows that Apple could not verify the developer. Open it once from **System Settings → Privacy & Security → Open Anyway** (on macOS 14 and older, Control-click the app and choose **Open**). Alternatively run `xattr -dr com.apple.quarantine /Applications/Paceline.app`. Later launches and updates downloaded by Paceline itself open normally.
 
@@ -126,7 +126,7 @@ npm run dist:win          # Windows installer + portable + update manifest
 npm run dist:mac          # macOS universal disk image + update manifest (on a Mac)
 ```
 
-Build output is generated in `release/` and must not be committed. The portable artifact is `release/Paceline-0.4.0-windows-x64.exe`; the installer is `release/Paceline-0.4.0-setup-x64.exe`, accompanied by `paceline-update.json`. Builds are unsigned unless a real certificate is configured, so Windows may display a publisher warning. The macOS disk image is `release/Paceline-0.4.0-mac-universal.dmg` with `paceline-update-mac.json`; it is ad-hoc signed and not notarized. macOS apps can only be built on a Mac, and the GitHub Actions workflows build it on a macOS runner. Public release publishing and code signing are separate maintainer steps; see [PUBLISHING.md](docs/PUBLISHING.md).
+Build output is generated in `release/` and must not be committed. The portable artifact is `release/Paceline-0.4.1-windows-x64.exe`; the installer is `release/Paceline-0.4.1-setup-x64.exe`, accompanied by `paceline-update.json`. Builds are unsigned unless a real certificate is configured, so Windows may display a publisher warning. The macOS disk image is `release/Paceline-0.4.1-mac-universal.dmg` with `paceline-update-mac.json`; it is ad-hoc signed and not notarized. macOS apps can only be built on a Mac, and the GitHub Actions workflows build it on a macOS runner. Public release publishing and code signing are separate maintainer steps; see [PUBLISHING.md](docs/PUBLISHING.md).
 
 The 0.3.0 dependency update removed the previously flagged build chain; `npm audit` reported zero known findings at validation. Review a fresh audit before distributing each release.
 

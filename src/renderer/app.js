@@ -28,6 +28,8 @@
   let analyticsLoadedAt = 0;
   let localLoadedAt = 0;
   let dragging = false;
+  let pointerHeldAt = 0;
+  let listOpenedAt = 0;
   let dragFrame = null;
   let pendingDrag = null;
   let state = {
@@ -146,12 +148,18 @@
     catch (error) { showNotice(error.message || t('app.error.adjustPanel')); }
   }
 
+  // Leaving the panel collapses it from any view, settings included, unless it is pinned.
   function scheduleCollapse() {
     clearTimeout(collapseTimer);
-    if (state.settings.pinned || settingsOpen || dragging || view !== 'monitor') return;
+    if (state.settings.pinned || dragging) return;
     collapseTimer = setTimeout(() => {
-      if (state.settings.pinned || settingsOpen || dragging || view !== 'monitor') return;
-      if (!pointerInside && !(keyboardFocus && root.contains(document.activeElement))) setExpanded(false);
+      if (state.settings.pinned || dragging || pointerInside) return;
+      if (keyboardFocus && root.contains(document.activeElement)) return;
+      // A held slider or the open theme list can sit outside the window: wait for them, but not for long.
+      const holding = pointerHeldAt && Date.now() - pointerHeldAt < 10000;
+      const choosing = document.activeElement === byId('theme-select') && Date.now() - listOpenedAt < 8000;
+      if (holding || choosing) { scheduleCollapse(); return; }
+      setExpanded(false);
     }, Math.max(200, Math.min(5000, Number(state.settings.hideDelayMs) || 450)));
   }
 
@@ -663,7 +671,13 @@
 
   root.addEventListener('pointerenter', () => { pointerInside = true; setExpanded(true); });
   root.addEventListener('pointerleave', () => { pointerInside = false; scheduleCollapse(); });
-  root.addEventListener('pointerdown', () => { keyboardFocus = false; });
+  root.addEventListener('pointerdown', () => { keyboardFocus = false; pointerHeldAt = Date.now(); });
+  const releasePointer = () => {
+    pointerHeldAt = 0;
+    if (!pointerInside) scheduleCollapse();
+  };
+  window.addEventListener('pointerup', releasePointer);
+  window.addEventListener('pointercancel', releasePointer);
   root.addEventListener('focusin', (event) => {
     clearTimeout(collapseTimer);
     setExpanded(true);
@@ -694,7 +708,10 @@
     try { await updateSettings({ visibleProviders: selected }); }
     catch (error) { showNotice(error.message || t('app.error.save')); render(); }
   }));
+  byId('theme-select').addEventListener('pointerdown', () => { listOpenedAt = Date.now(); });
+  byId('theme-select').addEventListener('keydown', () => { listOpenedAt = Date.now(); });
   byId('theme-select').addEventListener('change', async (event) => {
+    listOpenedAt = 0;
     try { await updateSettings({ theme: event.target.value }); }
     catch (error) { event.target.value = state.settings.theme; showNotice(error.message || t('app.error.theme')); }
   });

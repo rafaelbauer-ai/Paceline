@@ -40,7 +40,7 @@ Os builds não têm assinatura de código, então o Windows pode mostrar aviso d
 
 ### Mac
 
-Abra o `Paceline-0.4.0-mac-universal.dmg` e arraste o Paceline para Aplicativos. Ele roda no macOS 12 ou mais novo e fica na barra de menus, sem ícone no Dock.
+Abra o `Paceline-0.4.1-mac-universal.dmg` e arraste o Paceline para Aplicativos. Ele roda no macOS 12 ou mais novo e fica na barra de menus, sem ícone no Dock.
 
 O app tem assinatura ad-hoc, mas não é notarizado pela Apple. Por isso, na primeira vez o macOS diz que não conseguiu verificar o desenvolvedor. Libere uma vez em **Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim**. No macOS 14 ou anterior, também dá para clicar com Control no app e escolher **Abrir**. Outra opção é rodar `xattr -dr com.apple.quarantine /Applications/Paceline.app`.
 

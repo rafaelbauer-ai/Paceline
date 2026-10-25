@@ -549,7 +549,15 @@ function start() {
           await win.webContents.executeJavaScript(`document.getElementById('paceline').dispatchEvent(new PointerEvent('pointerleave'))`);
           await new Promise(resolve => setTimeout(resolve, 600));
           if (expanded) throw new Error('Auto-hide failed.');
-          atomicJSON(path.join(runtimeDir, 'smoke-result.json'), { ok: true, checks: ['renderer', 'collapse', 'expand', 'settings', 'four-edges', 'demo-isolation', 'automatic-themes-and-order', 'personalization', 'quota-clarity', 'vertical-peek', 'pace', 'agent-activity', 'drag', 'history', 'projects', 'sessions', 'update-isolation', 'pin', 'auto-hide'], width: result.width, height: result.height, screenshot: output });
+          // Leaving the panel collapses it from subviews too, so nobody is left with an open panel.
+          for (const open of [`if (document.getElementById('settings').hidden) document.getElementById('settings-toggle').click()`, `document.querySelector('[data-view="history"]').click()`]) {
+            await win.webContents.executeJavaScript(`window.paceline.expand(true)`); await waitRender();
+            await win.webContents.executeJavaScript(open); await waitRender();
+            await win.webContents.executeJavaScript(`document.getElementById('paceline').dispatchEvent(new PointerEvent('pointerleave'))`);
+            await new Promise(resolve => setTimeout(resolve, 600));
+            if (expanded) throw new Error('Auto-hide from a subview failed.');
+          }
+          atomicJSON(path.join(runtimeDir, 'smoke-result.json'), { ok: true, checks: ['renderer', 'collapse', 'expand', 'settings', 'four-edges', 'demo-isolation', 'automatic-themes-and-order', 'personalization', 'quota-clarity', 'vertical-peek', 'pace', 'agent-activity', 'drag', 'history', 'projects', 'sessions', 'update-isolation', 'pin', 'auto-hide', 'auto-hide-subviews'], width: result.width, height: result.height, screenshot: output });
           console.log('PACELINE_SMOKE_OK');
           app.quit();
         } catch (error) { console.error('PACELINE_SMOKE_FAILED', error.message); app.exit(1); }

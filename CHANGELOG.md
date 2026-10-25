@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — 2026-10-25
+
+- The panel collapses when the pointer leaves it from any view: Settings, History and Projects used to keep it open until `Esc`, so it looked stuck. It waits for a held slider or the open theme list, but never for long, and the pin still keeps it open. The smoke test now checks the collapse from Settings and History.
+
 ## 0.4.0 — 2026-10-23
 
 - macOS version: a universal disk image (Apple Silicon and Intel, macOS 12+), ad-hoc signed and not notarized, built and smoke-tested by a macOS job in both workflows. The app lives in the menu bar on every Space, keeps its data in `~/Library/Application Support/Paceline` and finds the CLIs through the login shell's `PATH`. It reads the Claude Code login from the Keychain, opens the Claude sign-in in the terminal app and supports opening at login. Its shortcut is `Control+Option+V`. The automatic theme recognizes the desktop apps and terminals running one of the CLIs. Updates use their own manifest and a verified disk image.

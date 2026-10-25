@@ -2,10 +2,10 @@
 
 ## Windows installation
 
-Version 0.4.0 builds two x64 artifacts:
+Version 0.4.1 builds two x64 artifacts:
 
-- `release/Paceline-0.4.0-setup-x64.exe`: assisted NSIS installer, per user, with a folder picker and Start menu/desktop shortcuts.
-- `release/Paceline-0.4.0-windows-x64.exe`: portable application.
+- `release/Paceline-0.4.1-setup-x64.exe`: assisted NSIS installer, per user, with a folder picker and Start menu/desktop shortcuts.
+- `release/Paceline-0.4.1-windows-x64.exe`: portable application.
 
 If `D:\projetos` exists, a new installation defaults to `D:\projetos\Paceline-Desktop`. An existing registered installation keeps its location. On machines without that folder the standard per-user program folder is used; the installer lets the user choose another writable directory. No administrator elevation is requested.
 
@@ -21,7 +21,7 @@ node scripts/install-claude-bridge.cjs --data-dir "<absolute-data-folder>" --uni
 
 ## macOS installation
 
-`release/Paceline-0.4.0-mac-universal.dmg` holds one universal app for Apple Silicon and Intel (macOS 12 or newer). Drag it into Applications. Its data lives in `~/Library/Application Support/Paceline`, outside the app bundle, so replacing the app keeps history and settings. `PACELINE_HOME` can still choose another absolute folder.
+`release/Paceline-0.4.1-mac-universal.dmg` holds one universal app for Apple Silicon and Intel (macOS 12 or newer). Drag it into Applications. Its data lives in `~/Library/Application Support/Paceline`, outside the app bundle, so replacing the app keeps history and settings. `PACELINE_HOME` can still choose another absolute folder.
 
 The build is ad-hoc signed, which Apple Silicon requires before it runs any code, and it is not notarized. Gatekeeper therefore asks the user to approve the first launch (see the README). A Developer ID certificate and Apple notarization would remove that prompt; neither is configured. A disk image has no uninstaller, so before deleting the app, remove the optional Claude bridge with **Settings → Connections → Remove integration**.
 
