@@ -25,7 +25,7 @@
     "update:manifest": "node scripts/create-update-manifest.cjs"
   },
   "devDependencies": {
-    "electron": "45.0.0",
+    "electron": "45.2.1",
     "electron-builder": "26.15.3"
   },
   "build": {
